@@ -1,5 +1,7 @@
 # Will go to HF someday
 data/
+data/all_images_8.bin
+data/all_images_64.bin
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
