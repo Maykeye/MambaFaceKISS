@@ -1,6 +1,12 @@
-* Mamba face kiss 
+---
+license: apache-2.0
+datasets:
+  - huggan/anime-faces
+---
 
-* * KISS
+# Mamba face kiss 
+
+## KISS
 
 This repo contains two Keep It Simple Stupid anime face generators that generates 64x64 faces from 8x8 provided images.
 
@@ -12,14 +18,14 @@ Mamba is being fed a sequence `[A][A]...[A][SEP][B][B][B]...[B]` where there are
 
 Two models are used. 
 
-* * * RNN goess brr (one way)
+### RNN goess brr (one way)
 
 One(`imgen3test.ipynb` and `imgen3.py`) always feeds images from top-left pixel to bottom-right pixel row by row
 
 ![Non-flip image](./krita-nonflip.png)
 
 
-* * * "Bi-directional" 
+### "Bi-directional" 
 
 Another take(`imgen3test_flip.ipynb` and `imgen3_flip.py`) feed from top-left pixel to bottom-right pixel in every even layer and every odd layer sees upscaled images in reverse order
 
@@ -28,7 +34,7 @@ Another take(`imgen3test_flip.ipynb` and `imgen3_flip.py`) feed from top-left pi
 This flip version also uses way more parameters and different dtype. I didn't notice that much difference.
 
 
-* * * * Command line tool
+#### Command line tool
 
 Simple script can be used to call the model on a single image
 
@@ -45,11 +51,11 @@ Writing 64x64 image to /tmp/face1.png
 It's not really good way to use, comparing to calling through jupyter it though: mamba2 is implemented using triton and it takes around 30 seconds to initialize the model each time (on Raider GE76).
 
 
-* * Recreating
+## Recreating
 
 Training is done in `imgen3(_flip)?.py`. Testing is in notebook. `Image_utils` should provide path to anime faces dataset.
 
-* * Naming and configuring
+## Naming and configuring
 
 Name imgen3 comes from "image generation 3". 
 Two other attemts are not that interesting to even backup them.
