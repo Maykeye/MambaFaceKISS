@@ -34,6 +34,12 @@ Simple script can be used to call the model on a single image
 
 ```console
 $ cli_imgen3_flip ./krita/face1.png face1.out.png
+
+python cli_imgen3_flip.py ./krita/face1.png /tmp/face1.png
+Weight path is data/image-flip-weights-1024x4-torch.bfloat16.bin
+Loading the model
+Loading 8x8 input image from ./krita/face1.png
+Writing 64x64 image to /tmp/face1.png
 ```
 
 It's not really good way to use, comparing to calling through jupyter it though: mamba2 is implemented using triton and it takes around 30 seconds to initialize the model each time (on Raider GE76).
