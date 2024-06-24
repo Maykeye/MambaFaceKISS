@@ -2,11 +2,13 @@ import torch.nn as nn
 from torch import Tensor
 from pathlib import Path
 import torch
+import torch.nn.functional as F
 import random
 import torchvision.io as VIO
 import torchvision.transforms.functional as VF
 from dataclasses import dataclass
 from tqdm.auto import tqdm
+from einops import rearrange
 
 # https://huggingface.co/datasets/huggan/anime-faces
 RAW_IMAGES_PATH = Path(
@@ -127,4 +129,29 @@ class ModelToRGB(nn.Module):
         x = self.norm(x)
         x = self.fc(x)
         x = x.sigmoid()
+        return x
+
+
+class RGBToModelConv2d(nn.Module):
+    def __init__(self, d_model, kernel=3, device=None, dtype=None):
+        super().__init__()
+        self.norm = nn.LayerNorm(d_model, device=device, dtype=dtype)
+        self.conv1 = nn.Conv2d(
+            3, 16, kernel, padding="same", device=device, dtype=dtype)
+        self.conv2 = nn.Conv2d(
+            16, 32, kernel, padding="same", device=device, dtype=dtype)
+        self.conv3 = nn.Conv2d(
+            32, 64, kernel, padding="same", device=device, dtype=dtype)
+        self.conv4 = nn.Conv2d(
+            64, 128, kernel, padding="same", device=device, dtype=dtype)
+        self.fc_encoder = nn.Linear(128, d_model, device=device, dtype=dtype)
+
+    def forward(self, x):
+        x = rearrange(x, "B H W C -> B C H W")
+        x = self.conv1(x).relu()
+        x = self.conv2(x).relu()
+        x = self.conv3(x).relu()
+        x = self.conv4(x).relu()
+        x = rearrange(x, "B C H W -> B H W C")
+        x = self.fc_encoder(x)
         return x
